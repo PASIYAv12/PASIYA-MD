@@ -14,3 +14,21 @@
     }
   }
 }
+{
+  "name": "PasiduAgent",
+  "style": {
+    "reply_prefix": "මචං —",
+    "confirm_before_danger": true,
+    "auto_daily_report": true,
+    "max_daily_actions": 100,
+    "trade_rules": {
+      "if_drawdown_percent": 2,
+      "action": "reduce_position_50"
+    },
+    "preferred_words": ["sell", "buy", "hold"]
+  },
+  "behavior_examples": [
+    { "situation": "market_drop_3pct", "preferred_action": "sell_partial" },
+    { "situation": "new_signal_from_group", "preferred_action": "notify_only" }
+  ]
+}
