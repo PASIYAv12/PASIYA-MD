@@ -1,0 +1,21 @@
+{
+  "logs": [
+    {
+      "ts": "2025-08-28T04:12:33.123Z",
+      "user": "94766359869",
+      "action": "execute",
+      "command": "send:+94711111111 Hello test",
+      "result": { "status": "dryrun", "command": "send:+94711111111 Hello test" }
+    },
+    {
+      "ts": "2025-08-28T07:30:00.000Z",
+      "user": "system",
+      "action": "scheduled_task",
+      "taskName": "morning_report"
+    }
+  ],
+  "runCount": 42,
+  "pending": {
+    "94722986772": "rm -rf /some/dir"
+  }
+}
