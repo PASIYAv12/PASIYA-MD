@@ -249,4 +249,12 @@ async function executeAction(rawCommand, sock, to) {
 }
 
 // start
-startSock().catch(e => logger.error(e));
+startSock().catch(e => logger.error(e));  
+
+
+FROM node:18-slim
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production
+COPY . .
+CMD ["node", "main.js"]
