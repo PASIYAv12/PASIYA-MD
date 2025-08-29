@@ -1,0 +1,13 @@
+{
+  "name": "pasiya-md-bot",
+  "description": "WhatsApp Bot - PASIYA MD",
+  "logo": "",
+  "keywords": ["nodejs", "bot", "whatsapp bot", "multi device", "pasiya-md"],
+  "repository": "https://github.com/",
+  "stack": "heroku-22",
+  "env": {
+    "SESSION_ID": {
+      "description": "Your WhatsApp session ID",
+      "value": "",
+      "required": true
+    },
