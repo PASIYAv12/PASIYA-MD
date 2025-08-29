@@ -27,13 +27,13 @@ global.owneroff = false
 global.autoswview = true
 
 //~~~~~~~~~~~ Settings Thumbnail ~~~~~~~~~~~//
-global.thumbbot = "https://url.bwmxmd.online/Adams.poh4tuhs.jpg"
-global.thumbown = "https://url.bwmxmd.online/Adams.poh4tuhs.jpg"
+global.thumbbot = ""
+global.thumbown = ""
 
 //~~~~~~~~~~~ Settings Channel ~~~~~~~~~~~//
-global.idchannel = "120363399707841760@newsletter*"
-global.channelname = "ーLady Bella UPDATES"
-global.channel = "https://whatsapp.com/channel/0029Vb5nSebFy722d2NEeU3C"
+global.idchannel = "120363402825685029@newsletter"
+global.channelname = "PASIYA-MD"
+global.channel = "https://whatsapp.com/channel/0029VbBfcs789iniJkpPNR1t"
 
 //~~~~~~~~~~~ Settings Message ~~~~~~~~~~~//
 global.mess = {
