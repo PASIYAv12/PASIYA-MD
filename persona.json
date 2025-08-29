@@ -32,3 +32,22 @@
     { "situation": "new_signal_from_group", "preferred_action": "notify_only" }
   ]
 }
+
+
+
+{
+  "name": "PasiduAgent",
+  "style": {
+    "reply_prefix": "මචං ⚡ —",
+    "confirm_before_danger": true,
+    "auto_daily_report": true,
+    "max_daily_actions": 100
+  },
+  "tasks": {
+    "morning_report": {
+      "time": "0 8 * * *",
+      "description": "Send daily summary"
+    }
+  },
+  "admins": ["94766359869", "94784548818"]
+}
