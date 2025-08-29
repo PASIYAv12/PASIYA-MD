@@ -257,4 +257,100 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --only=production
 COPY . .
-CMD ["node", "main.js"]
+CMD ["node", "main.js"]   
+
+import makeWASocket, { useMultiFileAuthState, DisconnectReason } from "@whiskeysockets/baileys";
+import { Low } from "lowdb";
+import { JSONFile } from "lowdb/node";
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
+import cron from "node-cron";
+
+dotenv.config();
+
+// DB
+const adapter = new JSONFile("db.json");
+const db = new Low(adapter, { logs: [], feedback: {}, runCount: 0 });
+await db.read();
+db.data ||= { logs: [], feedback: {}, runCount: 0 };
+
+// Persona
+const persona = JSON.parse(fs.readFileSync("persona.json", "utf-8"));
+
+// Admins
+const ADMINS = persona.admins || [];
+const isAdmin = (phone) => ADMINS.includes(phone);
+
+// Helper
+function appendLog(entry) {
+  db.data.logs.push({ ts: new Date().toISOString(), ...entry });
+  db.data.runCount++;
+  db.write();
+}
+const replyPrefix = () => persona.style.reply_prefix || "";
+
+// Bot Init
+const { state, saveCreds } = await useMultiFileAuthState("auth_info");
+const sock = makeWASocket({ auth: state });
+sock.ev.on("creds.update", saveCreds);
+
+sock.ev.on("messages.upsert", async ({ messages }) => {
+  const m = messages[0];
+  if (!m.message || !m.key.remoteJid) return;
+
+  const from = m.key.remoteJid;
+  const text = m.message.conversation || m.message.extendedTextMessage?.text || "";
+  const phone = from.split("@")[0];
+  const [cmd, ...args] = text.trim().split(/\s+/);
+
+  if (!cmd.startsWith("/")) return;
+
+  // --- Commands ---
+  if (!isAdmin(phone)) {
+    await sock.sendMessage(from, { text: `${replyPrefix()} Unauthorized.` });
+    return;
+  }
+
+  if (cmd === "/logs") {
+    const n = parseInt(args[0] || "20", 10);
+    const logs = db.data.logs.slice(-n);
+    const out = logs.map((x, i) => `${i}: ${x.ts} | ${x.user} | ${x.action} | ${x.command || ""} | ${x.result?.status || ""}`).join("\n\n");
+    await sock.sendMessage(from, { text: out || "No logs." });
+    appendLog({ user: phone, action: "view_logs" });
+  }
+
+  if (cmd === "/tasks") {
+    const tasks = persona.tasks || {};
+    const lines = Object.entries(tasks).map(([k,v]) => `${k} @ ${v.time} — ${v.description || ""}`);
+    await sock.sendMessage(from, { text: `${replyPrefix()} Tasks:\n${lines.join("\n")}` });
+    appendLog({ user: phone, action: "view_tasks" });
+  }
+
+  if (cmd === "/export_logs") {
+    const fname = `logs_${Date.now()}.json`;
+    fs.writeFileSync(fname, JSON.stringify(db.data.logs, null, 2));
+    await sock.sendMessage(from, { document: { url: fname }, mimetype: "application/json", fileName: fname });
+    appendLog({ user: phone, action: "export_logs" });
+  }
+
+  if (cmd === "/feedback") {
+    const [id, decision] = args;
+    if (!id || !decision) {
+      await sock.sendMessage(from, { text: "Usage: /feedback <log_index> <accept|reject>" });
+      return;
+    }
+    db.data.feedback[id] = decision;
+    await db.write();
+    await sock.sendMessage(from, { text: `${replyPrefix()} Feedback saved for log ${id}: ${decision}` });
+    appendLog({ user: phone, action: "feedback", target: id, result: decision });
+  }
+});
+
+// --- Scheduler ---
+Object.entries(persona.tasks || {}).forEach(([name, task]) => {
+  cron.schedule(task.time, () => {
+    appendLog({ user: "system", action: "scheduled_task", taskName: name });
+    console.log(`Task triggered: ${name}`);
+  });
+});
