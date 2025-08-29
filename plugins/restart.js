@@ -3,7 +3,7 @@ const { sleep } = require("../lib/functions");
 
 ven({  
     pattern: "restart",  
-    desc: "Restart 𝗛𝗜𝗦𝗢𝗞𝗔-𝗠𝗗",  
+    desc: "Restart pasiya-md ",  
     category: "owner",  
     filename: __filename  
 },  
