@@ -1,21 +1,5 @@
 
 {
-  "name": "pasidu-whatsapp-agent",
-  "version": "1.0.0",
-  "main": "main.js",
-  "scripts": {
-    "start": "node main.js"
-  },
-  "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
-    "dotenv": "^16.0.0",
-    "node-cron": "^3.0.0",
-    "lowdb": "^3.0.0",
-    "pino": "^8.0.0"
-  }
-}
-
-{
   "name": "PASIYA-MD",
   "version": "0.0.5",
   "description": "A WhatsApp Bot Created By pasiya-md base provid by pasiya-md-bot",
