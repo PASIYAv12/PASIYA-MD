@@ -1,0 +1,21 @@
+{
+ "name": "PASIYA-MD",
+  "description": "Javascript WhatsApp bot made by PASIYA-MDl",
+  "logo": "https://github.com/PASIYAv12/PASIYA-MD",
+  "keywords": ["bot"],
+  "success_url": "/",
+
+    "env": {
+        "SESSION_ID": {
+            "description": "Type the Session-ID you got from pair or scan qr.",
+            "required": true,
+            "value": "put session id here"
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
+        }
+     ],
+  "stack": "heroku-24"
+}
