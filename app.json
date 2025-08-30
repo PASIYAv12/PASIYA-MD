@@ -23,7 +23,7 @@
     "AUTO_REPLY": {
       "description": "Enable or disable auto replies (true/false).",
       "required": false,
-      "value": "true"
+      "value": "true" 
     },
     "AUTO_SEEN": {
       "description": "Automatically mark chats as seen (true/false).",
