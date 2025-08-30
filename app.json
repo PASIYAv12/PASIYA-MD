@@ -8,7 +8,7 @@
     "SESSION_ID": {
       "description": "Type the Session-ID you got from pair or scan qr.",
       "required": true,
-      "value": "enter PASIYA-MD session id here (ඔයාගෙ in box එකට එන SESSION_IDමෙතන්ට  එකදෙන්න"
+      "value": "enter PASIYA-MD session id here (ඔයාගෙ in box එකට එන SESSION_ID එක දෙන්න"
     },
     "AUTO_VOICE": {
       "description": "Enable or disable auto voice replies (true/false).",
