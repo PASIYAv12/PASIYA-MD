@@ -1,21 +1,45 @@
 {
- "name": "PASIYA-MD",
-  "description": "Javascript WhatsApp bot made by PASIYA-MDl",
+  "name": "PASIYA-MD",
+  "description": "Javascript WhatsApp bot made by PASIYA-MD",
   "logo": "https://github.com/PASIYAv12/PASIYA-MD",
-  "keywords": ["bot"],
+  "keywords": ["bot", "whatsapp", "pasiya-md"],
   "success_url": "/",
-
-    "env": {
-        "SESSION_ID": {
-            "description": "Type the Session-ID you got from pair or scan qr.",
-            "required": true,
-            "value": "ENTER PASIYA-MD session id here"
-        }
+  "env": {
+    "SESSION_ID": {
+      "description": "Type the Session-ID you got from pair or scan qr.",
+      "required": true,
+      "value": "enter PASIYA-MD session id here (ඔයාගෙ in box එකට එන SESSION_IDමෙතන්ට  එකදෙන්න"
     },
-    "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
-        }
-     ],
+    "AUTO_VOICE": {
+      "description": "Enable or disable auto voice replies (true/false).",
+      "required": false,
+      "value": "true"
+    },
+    "AUTO_TYPING": {
+      "description": "Enable or disable auto typing (true/false).",
+      "required": false,
+      "value": "true"
+    },
+    "AUTO_REPLY": {
+      "description": "Enable or disable auto replies (true/false).",
+      "required": false,
+      "value": "true"
+    },
+    "AUTO_SEEN": {
+      "description": "Automatically mark chats as seen (true/false).",
+      "required": false,
+      "value": "true"
+    },
+    "AUTO_STATUS_REPLY": {
+      "description": "Automatically reply to status updates (true/false).",
+      "required": false,
+      "value": "true"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
+    }
+  ],
   "stack": "heroku-24"
 }
