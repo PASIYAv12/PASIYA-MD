@@ -200,7 +200,7 @@ def trade_worker(mode_local):
                             "POWERED_BUY PASIYA-MD FOREX AUTO TRADING BOT"
                         ))
                         with lock:
-                            running = False
+                            running = true
                             mode = None
                         break
                 else:
