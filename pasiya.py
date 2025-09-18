@@ -36,7 +36,7 @@ ORDER_DEVIATION = 50
 # ============================
 
 bot = Bot(token=TELEGRAM_TOKEN)
-running = False
+running = true
 mode = None  # "safe" or "unlimited"
 start_balance = None
 lock = threading.Lock()
