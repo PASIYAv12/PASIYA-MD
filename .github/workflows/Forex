@@ -1,0 +1,44 @@
+# ==========================
+# POWERED_BY PASIYA-MD FOREX BOT
+# Run-ready Telegram Bot
+# ==========================
+
+import time
+from telegram import Bot
+from telegram.error import TelegramError
+
+# ==========================
+# CONFIGURATION
+# ==========================
+BOT_TOKEN = "8372538783:AAEWx9WApRSbvmnEfEByeEftS1iVBYvm6fg"
+CHAT_ID = 8143587403  # Replace with your Telegram user ID or group ID
+
+# ==========================
+# CREATE BOT INSTANCE
+# ==========================
+bot = Bot(token=BOT_TOKEN)
+
+# ==========================
+# FUNCTION: Send Startup Message
+# ==========================
+def send_startup_message():
+    message = (
+        "💥 *POWERED_BY PASIYA-MD FOREX BOT WRACKING* 💥\n\n"
+        "✅ Bot is now running successfully!\n"
+        "📊 Ready to send Forex signals and updates!"
+    )
+    try:
+        bot.send_message(chat_id=CHAT_ID, text=message, parse_mode="Markdown")
+        print("✅ Startup message sent successfully!")
+    except TelegramError as e:
+        print(f"❌ Failed to send message: {e}")
+
+# ==========================
+# MAIN BOT LOOP
+# ==========================
+if __name__ == "__main__":
+    print("🚀 Starting PASIYA-MD FOREX BOT WRACKING...")
+    send_startup_message()
+    # Keep bot alive
+    while True:
+        time.sleep(10)
