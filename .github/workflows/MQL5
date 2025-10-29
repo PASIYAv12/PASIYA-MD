@@ -1,0 +1,100 @@
+//+------------------------------------------------------------------+
+//|                Neural Auto Gold Trader (M5)                      |
+//|                Developed by PASIYA-MD AI LAB                     |
+//+------------------------------------------------------------------+
+#property strict
+
+input double Risk_Percent = 2.0;
+input int TakeProfit_Pips = 100;
+input int StopLoss_Pips = 60;
+input int MagicNumber = 999900;
+input string TradeSymbol = "XAUUSD";
+
+double LotSizeCalc()
+{
+   double balance = AccountInfoDouble(ACCOUNT_BALANCE);
+   double lot = NormalizeDouble((balance * (Risk_Percent/100.0)) / 1000.0, 2);
+   if(lot < 0.01) lot = 0.01;
+   return lot;
+}
+
+int OnInit()
+{
+   Print("🤖 Neural Auto Gold Trader Initialized Successfully!");
+   return(INIT_SUCCEEDED);
+}
+
+void OnTick()
+{
+   if(_Period != PERIOD_M5) return;
+   if(Symbol() != TradeSymbol) return;
+
+   //---- Indicators for AI logic
+   double ma_fast = iMA(TradeSymbol, PERIOD_M5, 9, 0, MODE_EMA, PRICE_CLOSE, 0);
+   double ma_slow = iMA(TradeSymbol, PERIOD_M5, 21, 0, MODE_EMA, PRICE_CLOSE, 0);
+   double rsi = iRSI(TradeSymbol, PERIOD_M5, 14, PRICE_CLOSE, 0);
+
+   //---- Neural-like decision logic
+   double nn_score = 0;
+   if(ma_fast > ma_slow) nn_score += 1.0;
+   if(rsi < 70 && rsi > 30) nn_score += 0.5;
+   if(ma_fast - ma_slow > 0.5) nn_score += 0.5;
+   if(Close[0] > ma_fast) nn_score += 0.5;
+
+   //---- Trading signals
+   bool buySignal = (nn_score >= 1.8);
+   bool sellSignal = (nn_score <= 0.8);
+
+   double lot = LotSizeCalc();
+   double sl = 0, tp = 0;
+
+   //--- check for open trades
+   bool buyOpen = false, sellOpen = false;
+   for(int i=0; i<OrdersTotal(); i++)
+   {
+      if(OrderSelect(i, SELECT_BY_POS, MODE_TRADES))
+      {
+         if(OrderSymbol() == TradeSymbol && OrderMagicNumber() == MagicNumber)
+         {
+            if(OrderType() == OP_BUY) buyOpen = true;
+            if(OrderType() == OP_SELL) sellOpen = true;
+         }
+      }
+   }
+
+   //---- BUY logic
+   if(buySignal && !buyOpen)
+   {
+      if(sellOpen) CloseAll(OP_SELL);
+      sl = Bid - StopLoss_Pips * _Point * 10;
+      tp = Bid + TakeProfit_Pips * _Point * 10;
+      OrderSend(TradeSymbol, OP_BUY, lot, Ask, 3, sl, tp, "BUY G5", MagicNumber, 0, clrGreen);
+      Print("🟢 BUY order opened | Lot: ", lot);
+   }
+
+   //---- SELL logic
+   if(sellSignal && !sellOpen)
+   {
+      if(buyOpen) CloseAll(OP_BUY);
+      sl = Ask + StopLoss_Pips * _Point * 10;
+      tp = Ask - TakeProfit_Pips * _Point * 10;
+      OrderSend(TradeSymbol, OP_SELL, lot, Bid, 3, sl, tp, "SELL G5", MagicNumber, 0, clrRed);
+      Print("🔴 SELL order opened | Lot: ", lot);
+   }
+}
+
+//--- Function to close all open trades of specific type
+void CloseAll(int type)
+{
+   for(int i=OrdersTotal()-1; i>=0; i--)
+   {
+      if(OrderSelect(i, SELECT_BY_POS, MODE_TRADES))
+      {
+         if(OrderMagicNumber() == MagicNumber && OrderSymbol() == TradeSymbol && OrderType() == type)
+         {
+            if(type == OP_BUY) OrderClose(OrderTicket(), OrderLots(), Bid, 3, clrWhite);
+            if(type == OP_SELL) OrderClose(OrderTicket(), OrderLots(), Ask, 3, clrWhite);
+         }
+      }
+   }
+}
